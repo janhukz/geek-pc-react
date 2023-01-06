@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
-import { Card, Form, Checkbox, Input, Button } from 'antd'
+import { Card, Form, Checkbox, Input, Button, message } from 'antd'
 import './index.scss'
 import logo from 'assets/logo.png'
+import { login } from 'api/user'
 
 export default class Login extends Component {
+  state = {
+    // 加载状态
+    loading: false
+  }
   render() {
     return (
       <div className="login">
@@ -15,9 +20,9 @@ export default class Login extends Component {
             validateTrigger={['onBlur']}
             onFinish={this.onFinish}
             initialValues={{
-                mobile:'13911111111',
-                code:'246810',
-                agree:true
+              mobile: '13911111111',
+              code: '246810',
+              agree: true
             }}
           >
             <Form.Item
@@ -71,7 +76,12 @@ export default class Login extends Component {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                loading={this.state.loading}
+              >
                 登录
               </Button>
             </Form.Item>
@@ -80,7 +90,27 @@ export default class Login extends Component {
       </div>
     )
   }
-  onFinish = (values) => {
-    console.log(values)
+  onFinish = async ({ mobile, code }) => {
+    this.setState({
+      loading: true
+    })
+    try {
+      const res = await login(mobile, code)
+      console.log(res)
+      // 登录成功
+      // 1. 保存token
+      localStorage.setItem('token', res.data.token)
+      // 2. 跳转到首页
+      this.props.history.push('/home')
+      // 3. 提示信息
+      message.success('登录成功', 1)
+    } catch (error) {
+    //   console.log(error)
+      message.warning(error.response.data.message, 1, () => {
+        this.setState({
+          loading: false
+        })
+      })
+    }
   }
 }
