@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Card, Form, Checkbox, Input, Button, message } from 'antd'
-import './index.scss'
+import styles from './index.module.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
+import { setToken } from 'utils/storage'
 
 export default class Login extends Component {
   state = {
@@ -11,7 +12,7 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <div className="login">
+      <div className={styles.login}>
         <Card className="login-container">
           <img src={logo} className="login-logo" alt="logo" />
           {/* 表单 */}
@@ -91,21 +92,30 @@ export default class Login extends Component {
     )
   }
   onFinish = async ({ mobile, code }) => {
+    console.log(this.props, 'props')
+
     this.setState({
       loading: true
     })
     try {
       const res = await login(mobile, code)
-      console.log(res)
+      // console.log(res)
       // 登录成功
       // 1. 保存token
-      localStorage.setItem('token', res.data.token)
+      // localStorage.setItem('token', res.data.token)
+      setToken(res.data.token)
       // 2. 跳转到首页
-      this.props.history.push('/home')
+      const { state } = this.props.location
+      console.log('state:' ,state);
+      if (state) {
+        this.props.history.push(state.from)
+      } else {
+        this.props.history.push('/home')
+      }
       // 3. 提示信息
       message.success('登录成功', 1)
     } catch (error) {
-    //   console.log(error)
+      //   console.log(error)
       message.warning(error.response.data.message, 1, () => {
         this.setState({
           loading: false
