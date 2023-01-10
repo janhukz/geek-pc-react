@@ -18,10 +18,10 @@ const { Header, Content, Sider } = Layout
 
 export default class HomeComponent extends Component {
   state = {
-    profile:{}
+    profile: {}
   }
   render() {
-    console.log(this.props);
+    console.log(this.props)
     return (
       <div className={styles.layout}>
         <Layout>
@@ -67,7 +67,8 @@ export default class HomeComponent extends Component {
             </Sider>
             <Layout
               style={{
-                padding: '24px'
+                padding: '24px',
+                overflow: 'auto'
               }}
             >
               <Content className="site-layout-background">
@@ -99,7 +100,7 @@ export default class HomeComponent extends Component {
     const res = await getUserProfile()
     // console.log(res)
     this.setState({
-      profile:res.data
+      profile: res.data
     })
   }
 }
