@@ -3,7 +3,6 @@ import { getToken, removeToken } from './storage'
 import history from './history'
 import { message } from 'antd'
 // 创建axios实例
-
 export const baseURL = 'http://geek.itheima.net/v1_0/'
 
 const instance = axios.create({
