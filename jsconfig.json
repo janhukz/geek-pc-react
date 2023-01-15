@@ -1,7 +1,6 @@
 {
-  // 配置根路径
     "compilerOptions": {
       "baseUrl": "src"
     },
     "include": ["src"]
-  }
+}
