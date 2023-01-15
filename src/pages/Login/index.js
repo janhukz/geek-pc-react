@@ -92,8 +92,6 @@ export default class Login extends Component {
     )
   }
   onFinish = async ({ mobile, code }) => {
-    console.log(this.props, 'props')
-
     this.setState({
       loading: true
     })
@@ -106,7 +104,6 @@ export default class Login extends Component {
       setToken(res.data.token)
       // 2. 跳转到首页
       const { state } = this.props.location
-      console.log('state:' ,state);
       if (state) {
         this.props.history.push(state.from)
       } else {

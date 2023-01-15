@@ -1,10 +1,13 @@
 import axios from 'axios'
 import { getToken, removeToken } from './storage'
 import history from './history'
-import {message} from 'antd'
+import { message } from 'antd'
 // 创建axios实例
+
+export const baseURL = 'http://geek.itheima.net/v1_0/'
+
 const instance = axios.create({
-  baseURL: 'http://geek.itheima.net/v1_0/',
+  baseURL,
   timeout: 5000
 })
 
@@ -29,6 +32,12 @@ instance.interceptors.response.use(
     return response.data
   },
   function (error) {
+    // 处理响应错误的情况
+    if (!error.response) {
+      // 如果error信息中没有response,说明网络超时
+      message.error('网络繁忙!')
+      return Promise.reject('网络繁忙，请稍后重试！')
+    }
     if (error.response.status === 401) {
       removeToken()
       history.push('/login')
